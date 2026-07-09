@@ -118,11 +118,7 @@ pytest
 python -m compileall app tests
 ```
 
-Docker 构建：
+## 一键部署平台构建
 
-```bash
-docker build -t cloud-deploy-demo-python:local .
-docker run --rm -p 8080:8080 \
-  -e SPRING_DATASOURCE_PASSWORD=secret \
-  cloud-deploy-demo-python:local
-```
+当前仓库不提交 Dockerfile，让平台使用 Cloud Native Buildpacks 构建镜像。`Procfile` 指定默认 Web
+进程为 `python -m app.start`，启动时会读取 `PORT` 或 `SERVER_PORT`，默认监听 `8080`。
