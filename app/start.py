@@ -5,8 +5,11 @@ import os
 import uvicorn
 
 
+DEFAULT_PORT = 8080
+
+
 def main() -> None:
-    port = int(os.getenv("PORT", os.getenv("SERVER_PORT", "8080")))
+    port = int(os.getenv("PORT", os.getenv("SERVER_PORT", str(DEFAULT_PORT))))
     uvicorn.run("app.main:app", host="0.0.0.0", port=port)
 
 

@@ -24,6 +24,7 @@ uvicorn app.main:app --host 0.0.0.0 --port 8080
 ```
 
 不设置数据库环境变量时，应用会使用本地 SQLite 文件 `cloud_deploy_demo.db`，便于直接启动和调试。
+容器环境默认监听 `8080`，并优先读取平台注入的 `PORT`，同时兼容 `SERVER_PORT`。
 
 ## 使用同一个 MySQL 数据库
 
@@ -114,6 +115,7 @@ OTEL_SDK_DISABLED=true pytest
 ## 验证
 
 ```bash
+pip install -r requirements-dev.txt
 pytest
 python -m compileall app tests
 ```
@@ -122,3 +124,15 @@ python -m compileall app tests
 
 当前仓库不提交 Dockerfile，让平台使用 Cloud Native Buildpacks 构建镜像。`Procfile` 指定默认 Web
 进程为 `python -m app.start`，启动时会读取 `PORT` 或 `SERVER_PORT`，默认监听 `8080`。
+
+Kubernetes/Helm 侧建议配置：
+
+```yaml
+container:
+  port: 8080
+service:
+  port: 80
+```
+
+应用镜像由非 root 用户运行，监听 `8080` 比监听 `80` 更符合容器最佳实践；Service 继续对外暴露
+`80`，再转发到 Pod 的 `8080`。

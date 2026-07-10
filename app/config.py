@@ -16,6 +16,7 @@ DEFAULT_LOCAL_DATABASE_URL = "sqlite+pysqlite:///./cloud_deploy_demo.db"
 DEFAULT_OTEL_ENDPOINT = (
     "http://opentelemetry-collector.observability.svc.cluster.local:4318/v1/traces"
 )
+DEFAULT_SERVER_PORT = 8080
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +40,7 @@ def get_settings() -> Settings:
         app_name=os.getenv("SPRING_APPLICATION_NAME", "cloud-deploy-demo-python"),
         deployment_environment=deployment_environment,
         database_url=_database_url_from_env(),
-        server_port=int(os.getenv("SERVER_PORT", "8080")),
+        server_port=_server_port_from_env(),
         otel_traces_endpoint=otel_endpoint,
         otel_debug_logging_enabled=_env_bool("OTEL_DEBUG_LOGGING_ENABLED", True),
         otel_sdk_disabled=_otel_sdk_disabled(deployment_environment),
@@ -84,6 +85,10 @@ def _env_bool(name: str, default: bool) -> bool:
     if value is None:
         return default
     return value.strip().lower() in {"1", "true", "yes", "y", "on"}
+
+
+def _server_port_from_env() -> int:
+    return int(os.getenv("PORT", os.getenv("SERVER_PORT", str(DEFAULT_SERVER_PORT))))
 
 
 def _has_spring_datasource_env() -> bool:
