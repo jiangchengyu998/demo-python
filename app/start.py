@@ -5,7 +5,7 @@ import os
 import uvicorn
 
 
-DEFAULT_PORT = 8080
+DEFAULT_PORT = 8000
 
 
 def main() -> None:

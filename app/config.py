@@ -16,7 +16,7 @@ DEFAULT_LOCAL_DATABASE_URL = "sqlite+pysqlite:///./cloud_deploy_demo.db"
 DEFAULT_OTEL_ENDPOINT = (
     "http://opentelemetry-collector.observability.svc.cluster.local:4318/v1/traces"
 )
-DEFAULT_SERVER_PORT = 8080
+DEFAULT_SERVER_PORT = 8000
 
 logger = logging.getLogger(__name__)
 

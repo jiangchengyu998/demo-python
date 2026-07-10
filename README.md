@@ -20,11 +20,11 @@
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-uvicorn app.main:app --host 0.0.0.0 --port 8080
+uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
 不设置数据库环境变量时，应用会使用本地 SQLite 文件 `cloud_deploy_demo.db`，便于直接启动和调试。
-容器环境默认监听 `8080`，并优先读取平台注入的 `PORT`，同时兼容 `SERVER_PORT`。
+容器环境默认监听 `8000`，并优先读取平台注入的 `PORT`，同时兼容 `SERVER_PORT`。
 
 ## 使用同一个 MySQL 数据库
 
@@ -42,7 +42,7 @@ SPRING_DATASOURCE_URL='jdbc:mysql://host:3306/cloud_deploy_demo?createDatabaseIf
 SPRING_DATASOURCE_USERNAME=root \
 SPRING_DATASOURCE_PASSWORD=secret \
 OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://opentelemetry-collector.observability.svc.cluster.local:4318/v1/traces \
-uvicorn app.main:app --host 0.0.0.0 --port 8080
+uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
 也支持 Python 常用的 `DATABASE_URL`，优先级高于 `SPRING_DATASOURCE_URL`：
@@ -66,7 +66,7 @@ DATABASE_URL='mysql+pymysql://root:secret@host:3306/cloud_deploy_demo?charset=ut
 创建示例：
 
 ```bash
-curl -X POST http://localhost:8080/api/items \
+curl -X POST http://localhost:8000/api/items \
   -H 'Content-Type: application/json' \
   -d '{"name":"demo item","description":"created from curl"}'
 ```
@@ -123,16 +123,16 @@ python -m compileall app tests
 ## 一键部署平台构建
 
 当前仓库不提交 Dockerfile，让平台使用 Cloud Native Buildpacks 构建镜像。`Procfile` 指定默认 Web
-进程为 `python -m app.start`，启动时会读取 `PORT` 或 `SERVER_PORT`，默认监听 `8080`。
+进程为 `python -m app.start`，启动时会读取 `PORT` 或 `SERVER_PORT`，默认监听 `8000`。
 
 Kubernetes/Helm 侧建议配置：
 
 ```yaml
 container:
-  port: 8080
+  port: 8000
 service:
   port: 80
 ```
 
-应用镜像由非 root 用户运行，监听 `8080` 比监听 `80` 更符合容器最佳实践；Service 继续对外暴露
-`80`，再转发到 Pod 的 `8080`。
+应用镜像由非 root 用户运行，监听 `8000` 比监听 `80` 更符合容器最佳实践；Service 继续对外暴露
+`80`，再转发到 Pod 的 `8000`。
