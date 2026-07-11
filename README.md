@@ -106,6 +106,9 @@ OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=http://opentelemetry-collector.observability.
 DEPLOYMENT_ENVIRONMENT=dev
 ```
 
+应用日志会自动注入当前 OpenTelemetry 上下文，格式里包含 `traceId` 和 `spanId`，方便在日志和
+Tempo/Grafana 链路之间互相跳转。
+
 本地测试不需要 OTEL 时可关闭：
 
 ```bash

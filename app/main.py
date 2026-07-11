@@ -12,15 +12,16 @@ from sqlalchemy.orm import Session
 
 from app.config import get_settings
 from app.database import get_db, migrate_database
-from app.observability import configure_observability, prometheus_response
+from app.observability import (
+    configure_logging,
+    configure_observability,
+    prometheus_response,
+)
 from app.schemas import ApiError, ItemRequest, ItemResponse, PageResponse
 from app.service import create_item, delete_item, get_item, list_items, update_item
 
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(levelname)s %(name)s - %(message)s",
-)
+configure_logging()
 
 settings = get_settings()
 
